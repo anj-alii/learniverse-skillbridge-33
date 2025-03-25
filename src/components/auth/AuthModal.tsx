@@ -1,7 +1,10 @@
 
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
+import { toast } from "sonner";
 import { ButtonCustom } from "@/components/ui/button-custom";
+import { useUser } from "@/contexts/UserContext";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -13,8 +16,37 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const navigate = useNavigate();
+  const { login, register } = useUser();
 
   if (!isOpen) return null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      if (activeTab === "login") {
+        await login(email, password);
+        toast.success("Successfully signed in!");
+      } else {
+        await register(name, email, password);
+        toast.success("Account created successfully!");
+      }
+      onClose();
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error(activeTab === "login" 
+        ? "Failed to sign in. Please check your credentials." 
+        : "Failed to create account."
+      );
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -65,7 +97,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
           </div>
         </div>
         
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit}>
           {activeTab === "register" && (
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -126,8 +158,12 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
             variant="primary"
             size="lg"
             className="w-full mt-6"
+            disabled={isSubmitting}
           >
-            {activeTab === "login" ? "Sign In" : "Create Account"}
+            {isSubmitting 
+              ? "Processing..." 
+              : (activeTab === "login" ? "Sign In" : "Create Account")
+            }
           </ButtonCustom>
         </form>
         

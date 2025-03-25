@@ -1,14 +1,19 @@
 
 import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { User, Search } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { User, Search, LogOut } from "lucide-react";
 import { ButtonCustom } from "@/components/ui/button-custom";
 import { cn } from "@/lib/utils";
+import { useUser } from "@/contexts/UserContext";
+import AuthModal from "@/components/auth/AuthModal";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, logout } = useUser();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,11 +28,21 @@ const Header = () => {
     setIsMobileMenuOpen(false);
   }, [location]);
 
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
   const routes = [
     { name: "Home", path: "/" },
     { name: "Marketplace", path: "/marketplace" },
     { name: "How It Works", path: "/how-it-works" },
   ];
+
+  // Add Dashboard route for authenticated users
+  if (user) {
+    routes.push({ name: "Dashboard", path: "/dashboard" });
+  }
 
   return (
     <header
@@ -74,12 +89,45 @@ const Header = () => {
           <ButtonCustom variant="ghost" size="sm" className="rounded-full p-2">
             <Search className="w-5 h-5" />
           </ButtonCustom>
-          <ButtonCustom variant="outline" size="sm">
-            Sign In
-          </ButtonCustom>
-          <ButtonCustom variant="primary" size="sm">
-            Join SkillSwap
-          </ButtonCustom>
+          
+          {user ? (
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-full">
+                <div className="w-7 h-7 rounded-full bg-skill-purple flex items-center justify-center text-white">
+                  {user.name.charAt(0).toUpperCase()}
+                </div>
+                <span className="text-sm font-medium">{user.name}</span>
+              </div>
+              <ButtonCustom 
+                variant="ghost" 
+                size="sm"
+                onClick={handleLogout}
+                className="text-gray-500"
+              >
+                <LogOut className="w-4 h-4 mr-1" />
+                Sign Out
+              </ButtonCustom>
+            </div>
+          ) : (
+            <>
+              <ButtonCustom 
+                variant="outline" 
+                size="sm"
+                onClick={() => setIsAuthModalOpen(true)}
+              >
+                Sign In
+              </ButtonCustom>
+              <ButtonCustom 
+                variant="primary" 
+                size="sm"
+                onClick={() => {
+                  setIsAuthModalOpen(true);
+                }}
+              >
+                Join SkillSwap
+              </ButtonCustom>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -138,15 +186,53 @@ const Header = () => {
             ))}
           </nav>
           <div className="flex flex-col gap-3">
-            <ButtonCustom variant="outline" size="md" className="w-full">
-              Sign In
-            </ButtonCustom>
-            <ButtonCustom variant="primary" size="md" className="w-full">
-              Join SkillSwap
-            </ButtonCustom>
+            {user ? (
+              <>
+                <div className="flex items-center gap-2 p-2 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                  <div className="w-8 h-8 rounded-full bg-skill-purple flex items-center justify-center text-white">
+                    {user.name.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="font-medium">{user.name}</span>
+                </div>
+                <ButtonCustom 
+                  variant="outline" 
+                  size="md" 
+                  className="w-full"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sign Out
+                </ButtonCustom>
+              </>
+            ) : (
+              <>
+                <ButtonCustom 
+                  variant="outline" 
+                  size="md" 
+                  className="w-full"
+                  onClick={() => setIsAuthModalOpen(true)}
+                >
+                  Sign In
+                </ButtonCustom>
+                <ButtonCustom 
+                  variant="primary" 
+                  size="md" 
+                  className="w-full"
+                  onClick={() => setIsAuthModalOpen(true)}
+                >
+                  Join SkillSwap
+                </ButtonCustom>
+              </>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)} 
+      />
     </header>
   );
 };
