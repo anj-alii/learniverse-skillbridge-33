@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { User, Search, LogOut, Settings } from "lucide-react";
@@ -41,7 +40,6 @@ const Header = () => {
     { name: "How It Works", path: "/how-it-works" },
   ];
 
-  // Add Dashboard route for authenticated users
   if (user) {
     routes.push({ name: "Dashboard", path: "/dashboard" });
   }
@@ -59,6 +57,7 @@ const Header = () => {
         <Link
           to="/"
           className="flex items-center gap-2 transition-transform duration-300 hover:scale-105"
+          aria-label="Go to homepage"
         >
           <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-skill-purple to-skill-vivid-purple flex items-center justify-center">
             <span className="font-semibold text-white">S</span>
@@ -68,7 +67,6 @@ const Header = () => {
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-8">
           {routes.map((route) => (
             <Link
@@ -86,7 +84,6 @@ const Header = () => {
           ))}
         </nav>
 
-        {/* Desktop Actions */}
         <div className="hidden md:flex items-center gap-4">
           <ButtonCustom variant="ghost" size="sm" className="rounded-full p-2">
             <Search className="w-5 h-5" />
@@ -104,7 +101,6 @@ const Header = () => {
                 <span className="text-sm font-medium">{user.name}</span>
               </div>
               
-              {/* User dropdown menu */}
               {isUserMenuOpen && (
                 <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
                   <div className="py-2">
@@ -157,7 +153,6 @@ const Header = () => {
           )}
         </div>
 
-        {/* Mobile Menu Button */}
         <div className="flex md:hidden items-center gap-4">
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -186,7 +181,6 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       <div
         className={cn(
           "md:hidden fixed inset-x-0 bg-white dark:bg-gray-900 transition-all duration-300 ease-in-out z-40 border-b border-gray-200 dark:border-gray-800",
@@ -279,7 +273,6 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Auth Modal */}
       <AuthModal 
         isOpen={isAuthModalOpen} 
         onClose={() => setIsAuthModalOpen(false)} 
