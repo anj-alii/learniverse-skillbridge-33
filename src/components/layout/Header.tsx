@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { User, Search, LogOut } from "lucide-react";
+import { User, Search, LogOut, Settings } from "lucide-react";
 import { ButtonCustom } from "@/components/ui/button-custom";
 import { cn } from "@/lib/utils";
 import { useUser } from "@/contexts/UserContext";
@@ -11,6 +11,7 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useUser();
@@ -31,6 +32,7 @@ const Header = () => {
   const handleLogout = () => {
     logout();
     navigate("/");
+    setIsUserMenuOpen(false);
   };
 
   const routes = [
@@ -91,22 +93,47 @@ const Header = () => {
           </ButtonCustom>
           
           {user ? (
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-full">
+            <div className="flex items-center gap-3 relative">
+              <div 
+                className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-full cursor-pointer"
+                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+              >
                 <div className="w-7 h-7 rounded-full bg-skill-purple flex items-center justify-center text-white">
                   {user.name.charAt(0).toUpperCase()}
                 </div>
                 <span className="text-sm font-medium">{user.name}</span>
               </div>
-              <ButtonCustom 
-                variant="ghost" 
-                size="sm"
-                onClick={handleLogout}
-                className="text-gray-500"
-              >
-                <LogOut className="w-4 h-4 mr-1" />
-                Sign Out
-              </ButtonCustom>
+              
+              {/* User dropdown menu */}
+              {isUserMenuOpen && (
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+                  <div className="py-2">
+                    <Link 
+                      to="/dashboard" 
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      onClick={() => setIsUserMenuOpen(false)}
+                    >
+                      <User className="w-4 h-4 mr-2" />
+                      Dashboard
+                    </Link>
+                    <Link 
+                      to="/account" 
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      onClick={() => setIsUserMenuOpen(false)}
+                    >
+                      <Settings className="w-4 h-4 mr-2" />
+                      Account Settings
+                    </Link>
+                    <button 
+                      onClick={handleLogout}
+                      className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sign Out
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <>
@@ -194,6 +221,30 @@ const Header = () => {
                   </div>
                   <span className="font-medium">{user.name}</span>
                 </div>
+                <ButtonCustom 
+                  variant="outline" 
+                  size="md" 
+                  className="w-full"
+                  onClick={() => {
+                    navigate("/dashboard");
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  <User className="w-4 h-4 mr-2" />
+                  Dashboard
+                </ButtonCustom>
+                <ButtonCustom 
+                  variant="outline" 
+                  size="md" 
+                  className="w-full"
+                  onClick={() => {
+                    navigate("/account");
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  <Settings className="w-4 h-4 mr-2" />
+                  Account Settings
+                </ButtonCustom>
                 <ButtonCustom 
                   variant="outline" 
                   size="md" 

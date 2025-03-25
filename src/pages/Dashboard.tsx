@@ -25,9 +25,22 @@ const Dashboard = () => {
             <h1 className="text-3xl font-bold">Welcome, {user.name}!</h1>
             <p className="text-gray-600 dark:text-gray-400 mt-1">Manage your skills, sessions, and connections</p>
           </div>
-          <ButtonCustom variant="outline" size="sm" onClick={logout}>
-            Sign Out
-          </ButtonCustom>
+          <div className="flex gap-2">
+            <ButtonCustom 
+              variant="outline" 
+              size="sm" 
+              onClick={() => navigate("/account")}
+            >
+              Account Settings
+            </ButtonCustom>
+            <ButtonCustom 
+              variant="outline" 
+              size="sm" 
+              onClick={logout}
+            >
+              Sign Out
+            </ButtonCustom>
+          </div>
         </div>
 
         <Tabs defaultValue="overview" className="w-full">
