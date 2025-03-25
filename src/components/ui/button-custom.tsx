@@ -7,6 +7,8 @@ interface ButtonCustomProps extends React.ButtonHTMLAttributes<HTMLButtonElement
   size?: "sm" | "md" | "lg";
   children: React.ReactNode;
   className?: string;
+  // Add safe properties for router integration
+  to?: string;
 }
 
 const ButtonCustom = React.forwardRef<HTMLButtonElement, ButtonCustomProps>(
