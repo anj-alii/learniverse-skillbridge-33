@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Search, Award, Calendar, Video, MessageSquare } from "lucide-react";
@@ -141,7 +140,6 @@ const Index = () => {
                   <ButtonCustom
                     variant="outline"
                     size="lg"
-                    as={Link}
                     to="/marketplace"
                   >
                     Explore Skills
@@ -212,11 +210,13 @@ const Index = () => {
             </div>
             
             <div className="text-center mt-12">
-              <Link to="/marketplace">
-                <ButtonCustom variant="outline" size="lg">
-                  View All Skills
-                </ButtonCustom>
-              </Link>
+              <ButtonCustom 
+                variant="outline" 
+                size="lg"
+                to="/marketplace"
+              >
+                View All Skills
+              </ButtonCustom>
             </div>
           </div>
         </section>

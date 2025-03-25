@@ -1,5 +1,5 @@
-
 import React from "react";
+import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 interface ButtonCustomProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -7,12 +7,13 @@ interface ButtonCustomProps extends React.ButtonHTMLAttributes<HTMLButtonElement
   size?: "sm" | "md" | "lg";
   children: React.ReactNode;
   className?: string;
-  // Add safe properties for router integration
+  // For router integration
   to?: string;
+  // Remove the as prop since we'll handle it internally based on to
 }
 
 const ButtonCustom = React.forwardRef<HTMLButtonElement, ButtonCustomProps>(
-  ({ variant = "primary", size = "md", children, className, ...props }, ref) => {
+  ({ variant = "primary", size = "md", children, className, to, ...props }, ref) => {
     const baseStyles = "relative rounded-full font-medium inline-flex items-center justify-center transition-all duration-300 ease-out button-animation overflow-hidden";
     
     const variants = {
@@ -28,6 +29,22 @@ const ButtonCustom = React.forwardRef<HTMLButtonElement, ButtonCustomProps>(
       lg: "text-lg py-3 px-8",
     };
 
+    // If the 'to' prop is provided, render as a Link
+    if (to) {
+      return (
+        <Link
+          to={to}
+          className={cn(baseStyles, variants[variant], sizes[size], className)}
+          {...(props as any)}
+        >
+          <span className="relative z-10 flex items-center justify-center gap-2">
+            {children}
+          </span>
+        </Link>
+      );
+    }
+
+    // Otherwise render as a regular button
     return (
       <button
         ref={ref}
