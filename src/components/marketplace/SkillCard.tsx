@@ -3,6 +3,7 @@ import React from "react";
 import { User, Calendar, Video } from "lucide-react";
 import { ButtonCustom } from "@/components/ui/button-custom";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
 
 interface SkillCardProps {
   id: string;
@@ -33,10 +34,34 @@ const SkillCard: React.FC<SkillCardProps> = ({
   imageUrl,
   index,
 }) => {
+  const { toast } = useToast();
+  
   const levelColors = {
     beginner: "bg-green-100 text-green-800",
     intermediate: "bg-blue-100 text-blue-800",
     advanced: "bg-purple-100 text-purple-800",
+  };
+
+  const handleRequestSwap = () => {
+    toast({
+      title: "Swap Requested",
+      description: `You requested to swap skills with ${instructor.name} for "${title}"`,
+      duration: 3000,
+    });
+    
+    console.log(`Requesting swap for skill: ${id} - ${title}`);
+    // Here you would typically make an API call to save the swap request
+  };
+
+  const handleViewDetails = () => {
+    toast({
+      title: "Viewing Details",
+      description: `You're viewing details for "${title}"`,
+      duration: 3000,
+    });
+    
+    console.log(`Viewing details for skill: ${id} - ${title}`);
+    // Here you would typically navigate to a details page
   };
 
   return (
@@ -127,6 +152,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
             variant="outline"
             size="sm"
             className="flex-1"
+            onClick={handleViewDetails}
           >
             Details
           </ButtonCustom>
@@ -134,6 +160,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
             variant="primary"
             size="sm"
             className="flex-1"
+            onClick={handleRequestSwap}
           >
             Request Swap
           </ButtonCustom>
