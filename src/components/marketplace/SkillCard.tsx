@@ -1,6 +1,6 @@
 
-import React from "react";
-import { User, Calendar, Video } from "lucide-react";
+import React, { useState } from "react";
+import { User, Calendar, Video, MessageSquare } from "lucide-react";
 import { ButtonCustom } from "@/components/ui/button-custom";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
@@ -35,6 +35,8 @@ const SkillCard: React.FC<SkillCardProps> = ({
   index,
 }) => {
   const { toast } = useToast();
+  const [showChatInput, setShowChatInput] = useState(false);
+  const [chatMessage, setChatMessage] = useState("");
   
   const levelColors = {
     beginner: "bg-green-100 text-green-800",
@@ -62,6 +64,28 @@ const SkillCard: React.FC<SkillCardProps> = ({
     
     console.log(`Viewing details for skill: ${id} - ${title}`);
     // Here you would typically navigate to a details page
+  };
+
+  const handleSendMessage = () => {
+    if (!chatMessage.trim()) return;
+    
+    toast({
+      title: "Message Sent",
+      description: `Your message was sent to ${instructor.name}`,
+      duration: 3000,
+    });
+    
+    console.log(`Message to ${instructor.name} about ${title}: ${chatMessage}`);
+    setChatMessage("");
+    setShowChatInput(false);
+  };
+
+  const handleLiveSessionEnquiry = () => {
+    if (format === "live") {
+      setShowChatInput(!showChatInput);
+    } else {
+      handleViewDetails();
+    }
   };
 
   return (
@@ -138,23 +162,53 @@ const SkillCard: React.FC<SkillCardProps> = ({
             <Calendar className="w-3 h-3 mr-1" />
             <span>{duration}</span>
           </div>
-          <div className="flex items-center">
+          <div 
+            className={cn(
+              "flex items-center", 
+              format === "live" && "cursor-pointer hover:text-skill-purple"
+            )}
+            onClick={format === "live" ? handleLiveSessionEnquiry : undefined}
+          >
             {format === "video" && <Video className="w-3 h-3 mr-1" />}
             {format === "live" && <User className="w-3 h-3 mr-1" />}
+            {format === "chat" && <MessageSquare className="w-3 h-3 mr-1" />}
             <span>
               {format === "video" ? "Video" : format === "live" ? "Live Session" : "Chat"}
             </span>
           </div>
         </div>
         
+        {showChatInput && format === "live" && (
+          <div className="mb-4">
+            <div className="flex items-center space-x-2">
+              <input
+                type="text"
+                value={chatMessage}
+                onChange={(e) => setChatMessage(e.target.value)}
+                placeholder={`Ask ${instructor.name} about this session...`}
+                className="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-skill-purple focus:border-transparent"
+                onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+              />
+              <ButtonCustom
+                variant="primary"
+                size="sm"
+                onClick={handleSendMessage}
+                className="px-3 py-2"
+              >
+                Send
+              </ButtonCustom>
+            </div>
+          </div>
+        )}
+        
         <div className="flex justify-between gap-2">
           <ButtonCustom
             variant="outline"
             size="sm"
             className="flex-1"
-            onClick={handleViewDetails}
+            onClick={format === "live" ? handleLiveSessionEnquiry : handleViewDetails}
           >
-            Details
+            {format === "live" ? "Enquire" : "Details"}
           </ButtonCustom>
           <ButtonCustom
             variant="primary"
