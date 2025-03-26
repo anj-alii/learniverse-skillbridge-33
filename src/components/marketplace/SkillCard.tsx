@@ -1,9 +1,10 @@
 
 import React, { useState } from "react";
-import { User, Calendar, Video, MessageSquare } from "lucide-react";
+import { User, Calendar, Video, MessageSquare, Star } from "lucide-react";
 import { ButtonCustom } from "@/components/ui/button-custom";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
+import { useUser } from "@/contexts/UserContext";
 
 interface SkillCardProps {
   id: string;
@@ -35,6 +36,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
   index,
 }) => {
   const { toast } = useToast();
+  const { user, useCredit } = useUser();
   const [showChatInput, setShowChatInput] = useState(false);
   const [chatMessage, setChatMessage] = useState("");
   
@@ -45,14 +47,32 @@ const SkillCard: React.FC<SkillCardProps> = ({
   };
 
   const handleRequestSwap = () => {
-    toast({
-      title: "Swap Requested",
-      description: `You requested to swap skills with ${instructor.name} for "${title}"`,
-      duration: 3000,
-    });
-    
-    console.log(`Requesting swap for skill: ${id} - ${title}`);
-    // Here you would typically make an API call to save the swap request
+    if (!user) {
+      toast({
+        title: "Login Required",
+        description: "Please login to request skill swaps",
+        duration: 3000,
+      });
+      return;
+    }
+
+    if (useCredit()) {
+      toast({
+        title: "Swap Requested",
+        description: `You requested to swap skills with ${instructor.name} for "${title}". Used 1 credit.`,
+        duration: 3000,
+      });
+      
+      console.log(`Requesting swap for skill: ${id} - ${title}`);
+      // Here you would typically make an API call to save the swap request
+    } else {
+      toast({
+        title: "Insufficient Credits",
+        description: "You don't have enough credits to request a skill swap",
+        variant: "destructive",
+        duration: 3000,
+      });
+    }
   };
 
   const handleViewDetails = () => {
@@ -108,6 +128,12 @@ const SkillCard: React.FC<SkillCardProps> = ({
         <div className="absolute top-3 right-3 z-10">
           <span className={cn("inline-block px-2 py-1 text-xs font-medium rounded-full", levelColors[level])}>
             {level.charAt(0).toUpperCase() + level.slice(1)}
+          </span>
+        </div>
+        <div className="absolute bottom-3 right-3 z-10">
+          <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-800 rounded-full">
+            <Star className="w-3 h-3 fill-yellow-500 text-yellow-500" />
+            <span>1 credit</span>
           </span>
         </div>
       </div>

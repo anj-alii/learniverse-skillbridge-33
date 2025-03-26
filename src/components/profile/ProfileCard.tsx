@@ -1,7 +1,8 @@
 
 import React from "react";
-import { Calendar, Video, MessageSquare } from "lucide-react";
+import { Calendar, Video, MessageSquare, Star } from "lucide-react";
 import { ButtonCustom } from "@/components/ui/button-custom";
+import { useUser } from "@/contexts/UserContext";
 
 interface ProfileCardProps {
   user: {
@@ -20,6 +21,8 @@ interface ProfileCardProps {
 }
 
 const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
+  const { user: currentUser } = useUser();
+  
   return (
     <div className="glass-card overflow-hidden animate-fade-in">
       <div className="relative h-32 bg-gradient-to-r from-skill-purple to-skill-vivid-purple">
@@ -72,6 +75,20 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
             </p>
           </div>
         </div>
+        
+        {currentUser && (
+          <div className="mb-4 flex items-center bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded-lg">
+            <Star className="h-5 w-5 text-yellow-500 fill-yellow-500 mr-2" />
+            <div>
+              <p className="text-sm font-medium text-gray-900 dark:text-white">
+                Skill Swap Credits: <span className="font-bold text-yellow-600 dark:text-yellow-400">{currentUser.credits}</span>
+              </p>
+              <p className="text-xs text-gray-600 dark:text-gray-400">
+                Use these to request skill swaps with other users
+              </p>
+            </div>
+          </div>
+        )}
         
         <p className="text-gray-600 dark:text-gray-400 mb-6">
           {user.bio}

@@ -7,6 +7,7 @@ interface User {
   name: string;
   email: string;
   avatar?: string;
+  credits: number; // Add credits to the user type
 }
 
 // Define context type
@@ -16,6 +17,8 @@ interface UserContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
+  useCredit: () => boolean; // Add new function to use credits
+  addCredit: (amount: number) => void; // Add new function to add credits
 }
 
 // Create context with default values
@@ -25,6 +28,8 @@ const UserContext = createContext<UserContextType>({
   login: async () => {},
   register: async () => {},
   logout: () => {},
+  useCredit: () => false,
+  addCredit: () => {},
 });
 
 // Custom hook to use the user context
@@ -56,7 +61,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const mockUser: User = {
         id: "user-1",
         name: email.split('@')[0], // Use part of email as name for demo
-        email
+        email,
+        credits: 5 // Default 5 credits when user logs in
       };
       
       setUser(mockUser);
@@ -80,7 +86,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const mockUser: User = {
         id: "user-" + Date.now(),
         name,
-        email
+        email,
+        credits: 5 // Default 5 credits for new users
       };
       
       setUser(mockUser);
@@ -99,8 +106,43 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem("skillswap_user");
   };
 
+  // Use a credit
+  const useCredit = () => {
+    if (!user || user.credits <= 0) return false;
+    
+    const updatedUser = {
+      ...user,
+      credits: user.credits - 1
+    };
+    
+    setUser(updatedUser);
+    localStorage.setItem("skillswap_user", JSON.stringify(updatedUser));
+    return true;
+  };
+
+  // Add credits
+  const addCredit = (amount: number) => {
+    if (!user) return;
+    
+    const updatedUser = {
+      ...user,
+      credits: user.credits + amount
+    };
+    
+    setUser(updatedUser);
+    localStorage.setItem("skillswap_user", JSON.stringify(updatedUser));
+  };
+
   return (
-    <UserContext.Provider value={{ user, isLoading, login, register, logout }}>
+    <UserContext.Provider value={{ 
+      user, 
+      isLoading, 
+      login, 
+      register, 
+      logout,
+      useCredit,
+      addCredit
+    }}>
       {children}
     </UserContext.Provider>
   );
