@@ -1,35 +1,40 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { Session, User } from "@supabase/supabase-js";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 // Define user type
-interface User {
+interface UserType {
   id: string;
   name: string;
   email: string;
   avatar?: string;
-  credits: number; // Add credits to the user type
+  credits: number;
 }
 
 // Define context type
 interface UserContextType {
-  user: User | null;
+  user: UserType | null;
   isLoading: boolean;
+  session: Session | null;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
-  logout: () => void;
-  useCredit: () => boolean; // Add new function to use credits
-  addCredit: (amount: number) => void; // Add new function to add credits
+  logout: () => Promise<void>;
+  useCredit: () => Promise<boolean>;
+  addCredit: (amount: number) => Promise<void>;
 }
 
 // Create context with default values
 const UserContext = createContext<UserContextType>({
   user: null,
   isLoading: true,
+  session: null,
   login: async () => {},
   register: async () => {},
-  logout: () => {},
-  useCredit: () => false,
-  addCredit: () => {},
+  logout: async () => {},
+  useCredit: async () => false,
+  addCredit: async () => {},
 });
 
 // Custom hook to use the user context
@@ -37,63 +42,112 @@ export const useUser = () => useContext(UserContext);
 
 // Provider component
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserType | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check for existing session on mount
+  // Initialize auth state
   useEffect(() => {
-    const storedUser = localStorage.getItem("skillswap_user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setIsLoading(false);
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, currentSession) => {
+        setSession(currentSession);
+        if (currentSession?.user) {
+          // Fetch user profile data
+          setTimeout(() => {
+            fetchUserProfile(currentSession.user.id);
+          }, 0);
+        } else {
+          setUser(null);
+        }
+      }
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      setSession(currentSession);
+      if (currentSession?.user) {
+        fetchUserProfile(currentSession.user.id);
+      } else {
+        setIsLoading(false);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
-  // Mock login function
+  // Fetch user profile from database
+  const fetchUserProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
+
+      if (error) {
+        console.error("Error fetching user profile:", error);
+        setUser(null);
+      } else if (data) {
+        setUser({
+          id: data.id,
+          name: data.name || "User",
+          email: data.email || "",
+          avatar: data.avatar,
+          credits: data.credits || 0,
+        });
+      }
+    } catch (error) {
+      console.error("Error in fetchUserProfile:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Login function
   const login = async (email: string, password: string) => {
-    // In a real app, this would make an API call
     setIsLoading(true);
     try {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock user data (in a real app, this would come from your backend)
-      const mockUser: User = {
-        id: "user-1",
-        name: email.split('@')[0], // Use part of email as name for demo
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
-        credits: 5 // Default 5 credits when user logs in
-      };
+        password,
+      });
+
+      if (error) throw error;
       
-      setUser(mockUser);
-      localStorage.setItem("skillswap_user", JSON.stringify(mockUser));
-    } catch (error) {
+      // User profile data is fetched via the auth state change listener
+    } catch (error: any) {
       console.error("Login error:", error);
+      toast.error(error.message || "Failed to sign in");
       throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Mock register function
+  // Register function
   const register = async (name: string, email: string, password: string) => {
     setIsLoading(true);
     try {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock user creation
-      const mockUser: User = {
-        id: "user-" + Date.now(),
-        name,
+      const { data, error } = await supabase.auth.signUp({
         email,
-        credits: 5 // Default 5 credits for new users
-      };
+        password,
+        options: {
+          data: {
+            name,
+          },
+        },
+      });
+
+      if (error) throw error;
       
-      setUser(mockUser);
-      localStorage.setItem("skillswap_user", JSON.stringify(mockUser));
-    } catch (error) {
+      // User profile will be created by the database trigger
+      toast.success("Account created! Verify your email if required.");
+    } catch (error: any) {
       console.error("Registration error:", error);
+      toast.error(error.message || "Failed to create account");
       throw error;
     } finally {
       setIsLoading(false);
@@ -101,42 +155,80 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   // Logout function
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem("skillswap_user");
+  const logout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      setUser(null);
+      setSession(null);
+    } catch (error: any) {
+      console.error("Logout error:", error);
+      toast.error(error.message || "Failed to sign out");
+    }
   };
 
   // Use a credit
-  const useCredit = () => {
+  const useCredit = async () => {
     if (!user || user.credits <= 0) return false;
     
-    const updatedUser = {
-      ...user,
-      credits: user.credits - 1
-    };
-    
-    setUser(updatedUser);
-    localStorage.setItem("skillswap_user", JSON.stringify(updatedUser));
-    return true;
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .update({ credits: user.credits - 1 })
+        .eq("id", user.id)
+        .select("*")
+        .single();
+        
+      if (error) throw error;
+      
+      if (data) {
+        setUser({
+          ...user,
+          credits: data.credits,
+        });
+        return true;
+      }
+      
+      return false;
+    } catch (error) {
+      console.error("Error using credit:", error);
+      toast.error("Failed to use credit");
+      return false;
+    }
   };
 
   // Add credits
-  const addCredit = (amount: number) => {
+  const addCredit = async (amount: number) => {
     if (!user) return;
     
-    const updatedUser = {
-      ...user,
-      credits: user.credits + amount
-    };
-    
-    setUser(updatedUser);
-    localStorage.setItem("skillswap_user", JSON.stringify(updatedUser));
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .update({ credits: user.credits + amount })
+        .eq("id", user.id)
+        .select("*")
+        .single();
+        
+      if (error) throw error;
+      
+      if (data) {
+        setUser({
+          ...user,
+          credits: data.credits,
+        });
+        toast.success(`Added ${amount} credits!`);
+      }
+    } catch (error) {
+      console.error("Error adding credits:", error);
+      toast.error("Failed to add credits");
+    }
   };
 
   return (
     <UserContext.Provider value={{ 
       user, 
       isLoading, 
+      session,
       login, 
       register, 
       logout,

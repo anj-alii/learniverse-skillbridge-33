@@ -7,21 +7,23 @@ import CardHeader from "./card/CardHeader";
 import InstructorInfo from "./card/InstructorInfo";
 import SkillInfo from "./card/SkillInfo";
 import ChatInput from "./card/ChatInput";
+import { requestSession } from "@/services/skillService";
 
 interface SkillCardProps {
   id: string;
   title: string;
   category: string;
   instructor: {
+    id: string;
     name: string;
-    avatar: string;
+    avatar?: string;
     rating: number;
   };
-  duration: string;
-  format: "video" | "live" | "chat";
+  duration?: string;
+  format: string;
   level: "beginner" | "intermediate" | "advanced";
   description: string;
-  imageUrl: string;
+  imageUrl?: string;
   index: number;
 }
 
@@ -40,8 +42,9 @@ const SkillCard: React.FC<SkillCardProps> = ({
   const { toast } = useToast();
   const { user, useCredit } = useUser();
   const [showChatInput, setShowChatInput] = useState(false);
+  const [isRequesting, setIsRequesting] = useState(false);
   
-  const handleRequestSwap = () => {
+  const handleRequestSwap = async () => {
     if (!user) {
       toast({
         title: "Login Required",
@@ -51,22 +54,38 @@ const SkillCard: React.FC<SkillCardProps> = ({
       return;
     }
 
-    if (useCredit()) {
-      toast({
-        title: "Swap Requested",
-        description: `You requested to swap skills with ${instructor.name} for "${title}". Used 1 credit.`,
-        duration: 3000,
-      });
+    setIsRequesting(true);
+    try {
+      // First check if user has credits
+      const hasCredit = await useCredit();
       
-      console.log(`Requesting swap for skill: ${id} - ${title}`);
-      // Here you would typically make an API call to save the swap request
-    } else {
+      if (hasCredit) {
+        // Create session request
+        await requestSession(id, instructor.id, user.id);
+        
+        toast({
+          title: "Swap Requested",
+          description: `You requested to swap skills with ${instructor.name} for "${title}". Used 1 credit.`,
+          duration: 3000,
+        });
+      } else {
+        toast({
+          title: "Insufficient Credits",
+          description: "You don't have enough credits to request a skill swap",
+          variant: "destructive",
+          duration: 3000,
+        });
+      }
+    } catch (error) {
+      console.error("Error requesting swap:", error);
       toast({
-        title: "Insufficient Credits",
-        description: "You don't have enough credits to request a skill swap",
+        title: "Request Failed",
+        description: "There was an error requesting the skill swap. Please try again.",
         variant: "destructive",
         duration: 3000,
       });
+    } finally {
+      setIsRequesting(false);
     }
   };
 
@@ -81,7 +100,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
     // Here you would typically navigate to a details page
   };
 
-  const handleSendMessage = (chatMessage: string) => {
+  const handleSendMessage = async (chatMessage: string) => {
     toast({
       title: "Message Sent",
       description: `Your message was sent to ${instructor.name}`,
@@ -93,7 +112,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
   };
 
   const handleLiveSessionEnquiry = () => {
-    if (format === "live") {
+    if (format === "1-on-1" || format === "group") {
       setShowChatInput(!showChatInput);
     } else {
       handleViewDetails();
@@ -106,7 +125,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
       style={{ "--appear-delay": index } as React.CSSProperties}
     >
       <CardHeader 
-        imageUrl={imageUrl}
+        imageUrl={imageUrl || "https://placehold.co/600x400/9b87f5/ffffff?text=Skill"}
         title={title}
         category={category}
         level={level}
@@ -126,7 +145,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
           onFormatClick={handleLiveSessionEnquiry}
         />
         
-        {showChatInput && format === "live" && (
+        {showChatInput && (format === "1-on-1" || format === "group") && (
           <ChatInput 
             instructorName={instructor.name}
             onSendMessage={handleSendMessage}
@@ -138,17 +157,18 @@ const SkillCard: React.FC<SkillCardProps> = ({
             variant="outline"
             size="sm"
             className="flex-1"
-            onClick={format === "live" ? handleLiveSessionEnquiry : handleViewDetails}
+            onClick={format === "1-on-1" || format === "group" ? handleLiveSessionEnquiry : handleViewDetails}
           >
-            {format === "live" ? "Enquire" : "Details"}
+            {format === "1-on-1" || format === "group" ? "Enquire" : "Details"}
           </ButtonCustom>
           <ButtonCustom
             variant="primary"
             size="sm"
             className="flex-1"
             onClick={handleRequestSwap}
+            disabled={isRequesting}
           >
-            Request Swap
+            {isRequesting ? "Requesting..." : "Request Swap"}
           </ButtonCustom>
         </div>
       </div>

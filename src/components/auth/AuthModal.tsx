@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
@@ -38,10 +37,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
       onClose();
       navigate("/dashboard");
     } catch (error) {
-      toast.error(activeTab === "login" 
-        ? "Failed to sign in. Please check your credentials." 
-        : "Failed to create account."
-      );
       console.error(error);
     } finally {
       setIsSubmitting(false);
