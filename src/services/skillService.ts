@@ -9,7 +9,7 @@ export interface Skill {
   description: string;
   category: string;
   level: 'beginner' | 'intermediate' | 'advanced';
-  format: string;
+  format: 'video' | 'live' | 'chat' | '1-on-1' | 'group' | 'course' | 'materials';
   duration?: string;
   price: number;
   image?: string;
@@ -70,6 +70,13 @@ export async function getSkills() {
 
 export async function createSkill(skillData: Omit<Skill, 'id' | 'instructor' | 'is_active' | 'created_at'>) {
   try {
+    // Get the current user
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
+
     const { data, error } = await supabase
       .from('skills')
       .insert({
@@ -81,6 +88,7 @@ export async function createSkill(skillData: Omit<Skill, 'id' | 'instructor' | '
         duration: skillData.duration,
         price: skillData.price,
         image: skillData.image,
+        user_id: user.id // Adding the required user_id field
       })
       .select()
       .single();

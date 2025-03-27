@@ -1,75 +1,61 @@
 
 import React from "react";
-import { Calendar, Video, User, MessageSquare } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Clock, Users, Video, Book, MessageCircle } from "lucide-react";
 
 interface SkillInfoProps {
-  duration: string;
+  duration?: string;
   format: "video" | "live" | "chat" | "1-on-1" | "group" | "course" | "materials";
   description: string;
-  onFormatClick: () => void;
+  onFormatClick?: () => void;
 }
 
 const SkillInfo: React.FC<SkillInfoProps> = ({
   duration,
   format,
   description,
-  onFormatClick
+  onFormatClick,
 }) => {
-  const getFormatIcon = () => {
-    switch (format) {
-      case "video":
-      case "course":
-        return <Video className="w-3 h-3 mr-1" />;
-      case "live":
-      case "1-on-1":
-      case "group":
-        return <User className="w-3 h-3 mr-1" />;
-      case "chat":
-      case "materials":
-      default:
-        return <MessageSquare className="w-3 h-3 mr-1" />;
-    }
+  const formatIcons = {
+    "video": <Video className="w-4 h-4 mr-1" />,
+    "live": <Video className="w-4 h-4 mr-1" />,
+    "chat": <MessageCircle className="w-4 h-4 mr-1" />,
+    "1-on-1": <Users className="w-4 h-4 mr-1" />,
+    "group": <Users className="w-4 h-4 mr-1" />,
+    "course": <Book className="w-4 h-4 mr-1" />,
+    "materials": <Book className="w-4 h-4 mr-1" />,
   };
 
-  const getFormatLabel = () => {
-    switch (format) {
-      case "video": return "Video";
-      case "live": return "Live Session";
-      case "chat": return "Chat";
-      case "1-on-1": return "1-on-1 Session";
-      case "group": return "Group Session";
-      case "course": return "Course";
-      case "materials": return "Materials";
-      default: return format;
-    }
+  const formatLabels = {
+    "video": "Video",
+    "live": "Live",
+    "chat": "Chat",
+    "1-on-1": "1-on-1",
+    "group": "Group",
+    "course": "Course",
+    "materials": "Materials",
   };
-
-  const isInteractive = format === "live" || format === "1-on-1" || format === "group";
 
   return (
-    <>
-      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+    <div className="mb-3">
+      <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
+        {duration && (
+          <span className="flex items-center mr-3">
+            <Clock className="w-4 h-4 mr-1" />
+            {duration}
+          </span>
+        )}
+        <span 
+          className="flex items-center cursor-pointer hover:text-skill-vivid-purple"
+          onClick={onFormatClick}
+        >
+          {formatIcons[format]}
+          {formatLabels[format]}
+        </span>
+      </div>
+      <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
         {description}
       </p>
-      
-      <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400 mb-4">
-        <div className="flex items-center">
-          <Calendar className="w-3 h-3 mr-1" />
-          <span>{duration}</span>
-        </div>
-        <div 
-          className={cn(
-            "flex items-center", 
-            isInteractive && "cursor-pointer hover:text-skill-purple"
-          )}
-          onClick={isInteractive ? onFormatClick : undefined}
-        >
-          {getFormatIcon()}
-          <span>{getFormatLabel()}</span>
-        </div>
-      </div>
-    </>
+    </div>
   );
 };
 
