@@ -26,11 +26,11 @@ const sampleSkills: Skill[] = [
   {
     id: "sample-1",
     title: "JavaScript Fundamentals",
-    description: "Learn the core concepts of JavaScript, including variables, data types, functions, and control flow. This course is perfect for beginners who want to start their coding journey.",
+    description: "Learn the core concepts of JavaScript, including variables, data types, functions, and control flow. This 1-on-1 course is customized to your learning pace and needs.",
     category: "Programming",
     level: "beginner",
-    format: "video",
-    duration: "4 weeks",
+    format: "1-on-1",
+    duration: "Custom",
     price: 1,
     image: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
     instructor: {
@@ -45,11 +45,11 @@ const sampleSkills: Skill[] = [
   {
     id: "sample-2",
     title: "Responsive Web Design",
-    description: "Master the art of creating websites that look great on any device. Learn about CSS grid, flexbox, media queries, and modern layout techniques.",
+    description: "Master the art of creating websites that look great on any device. 1-on-1 sessions focused on CSS grid, flexbox, media queries, and modern layout techniques tailored to your projects.",
     category: "Design",
     level: "intermediate",
-    format: "course",
-    duration: "6 weeks",
+    format: "1-on-1",
+    duration: "Custom",
     price: 2,
     image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1055&q=80",
     instructor: {
@@ -64,7 +64,7 @@ const sampleSkills: Skill[] = [
   {
     id: "sample-3",
     title: "Digital Marketing Strategy",
-    description: "Develop comprehensive digital marketing strategies to grow your business online. Covers SEO, social media, content marketing, and analytics.",
+    description: "Develop comprehensive digital marketing strategies in personalized 1-on-1 sessions. Custom coaching on SEO, social media, content marketing, and analytics for your specific business needs.",
     category: "Marketing",
     level: "advanced",
     format: "1-on-1",
@@ -83,13 +83,13 @@ const sampleSkills: Skill[] = [
   {
     id: "sample-4",
     title: "Spanish for Beginners",
-    description: "Start speaking Spanish from day one with this practical, conversation-focused course designed for complete beginners.",
+    description: "Start speaking Spanish from day one with this practical, conversation-focused 1-on-1 coaching. Personalized lessons designed for your specific learning style and goals.",
     category: "Language",
     level: "beginner",
-    format: "group",
-    duration: "8 weeks",
+    format: "1-on-1",
+    duration: "Custom",
     price: 1,
-    image: "https://images.unsplash.com/photo-1551601651-bc60f254d532?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
+    image: "https://images.unsplash.com/photo-1596523738847-a0a915b0a792?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1074&q=80",
     instructor: {
       id: "instructor-4",
       name: "Carlos Mendez",
@@ -102,11 +102,11 @@ const sampleSkills: Skill[] = [
   {
     id: "sample-5",
     title: "Advanced React Patterns",
-    description: "Take your React skills to the next level by learning advanced patterns, performance optimization, and state management.",
+    description: "Take your React skills to the next level with personalized 1-on-1 mentoring. Sessions focus on advanced patterns, performance optimization, and state management tailored to your projects.",
     category: "Programming",
     level: "advanced",
-    format: "live",
-    duration: "5 weeks",
+    format: "1-on-1",
+    duration: "Custom",
     price: 2,
     image: "https://images.unsplash.com/photo-1633356122102-3fe601e05bd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
     instructor: {
@@ -121,11 +121,11 @@ const sampleSkills: Skill[] = [
   {
     id: "sample-6",
     title: "Piano for Beginners",
-    description: "Learn to play the piano with no prior experience. Covers reading music, finger technique, and basic songs to get you started.",
+    description: "Learn to play the piano with no prior experience in customized 1-on-1 lessons. Personal coaching on reading music, finger technique, and songs selected based on your musical interests.",
     category: "Music",
     level: "beginner",
-    format: "video",
-    duration: "12 weeks",
+    format: "1-on-1",
+    duration: "Custom",
     price: 1,
     image: "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
     instructor: {
@@ -140,11 +140,11 @@ const sampleSkills: Skill[] = [
   {
     id: "sample-7",
     title: "Yoga Fundamentals",
-    description: "Build strength, flexibility and mindfulness with this comprehensive yoga course for beginners. Learn proper alignment and breathing techniques.",
+    description: "Build strength, flexibility and mindfulness with personalized 1-on-1 yoga instruction. Sessions adapted to your body's needs with proper alignment and breathing techniques.",
     category: "Health",
     level: "beginner",
-    format: "video",
-    duration: "8 weeks",
+    format: "1-on-1",
+    duration: "Custom",
     price: 1,
     image: "https://images.unsplash.com/photo-1545205597-3d9d02c29597?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
     instructor: {
@@ -159,11 +159,11 @@ const sampleSkills: Skill[] = [
   {
     id: "sample-8",
     title: "Photography Masterclass",
-    description: "Master the technical and creative aspects of photography. Learn composition, lighting, and post-processing to create stunning images.",
+    description: "Master photography through private 1-on-1 sessions. Personalized instruction on composition, lighting, and post-processing tailored to your equipment and creative vision.",
     category: "Art",
     level: "intermediate",
-    format: "course",
-    duration: "10 weeks",
+    format: "1-on-1",
+    duration: "Custom",
     price: 2,
     image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1164&q=80",
     instructor: {
@@ -178,11 +178,11 @@ const sampleSkills: Skill[] = [
   {
     id: "sample-9",
     title: "Data Science with Python",
-    description: "Learn how to analyze and visualize data using Python. Master pandas, NumPy, matplotlib, and scikit-learn for real-world applications.",
+    description: "Learn data analysis and visualization with Python in customized 1-on-1 sessions. Personalized mentoring on pandas, NumPy, matplotlib, and scikit-learn with projects relevant to your field.",
     category: "Programming",
     level: "intermediate",
-    format: "course",
-    duration: "12 weeks",
+    format: "1-on-1",
+    duration: "Custom",
     price: 2,
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
     instructor: {
@@ -197,11 +197,11 @@ const sampleSkills: Skill[] = [
   {
     id: "sample-10",
     title: "French Cuisine Basics",
-    description: "Learn the fundamental techniques of French cooking. Master classic dishes and understand the principles behind French culinary traditions.",
+    description: "Learn French cooking techniques in private 1-on-1 cooking sessions. Personalized instruction on classic dishes and culinary traditions adapted to your kitchen setup and dietary preferences.",
     category: "Cooking",
     level: "beginner",
-    format: "live",
-    duration: "6 weeks",
+    format: "1-on-1",
+    duration: "Custom",
     price: 1,
     image: "https://images.unsplash.com/photo-1528712306091-ed0763094c98?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1280&q=80",
     instructor: {
@@ -216,11 +216,11 @@ const sampleSkills: Skill[] = [
   {
     id: "sample-11",
     title: "UI/UX Design Principles",
-    description: "Learn how to create user-centered designs that are both beautiful and functional. Master user research, wireframing, prototyping, and usability testing.",
+    description: "Create user-centered designs with personalized 1-on-1 mentoring. Individual coaching on user research, wireframing, prototyping, and usability testing applied to your specific projects.",
     category: "Design",
     level: "intermediate",
-    format: "course",
-    duration: "8 weeks",
+    format: "1-on-1",
+    duration: "Custom",
     price: 2,
     image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1064&q=80",
     instructor: {
@@ -235,11 +235,11 @@ const sampleSkills: Skill[] = [
   {
     id: "sample-12",
     title: "Public Speaking Mastery",
-    description: "Overcome stage fright and develop the confidence to speak effectively in public. Learn techniques for engaging presentations and impactful speeches.",
+    description: "Overcome stage fright and build confidence with 1-on-1 public speaking coaching. Personalized sessions focused on your specific speaking challenges and presentation goals.",
     category: "Business",
     level: "beginner",
     format: "1-on-1",
-    duration: "4 weeks",
+    duration: "Custom",
     price: 3,
     image: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
     instructor: {

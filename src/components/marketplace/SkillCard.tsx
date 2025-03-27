@@ -108,11 +108,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
   };
 
   const handleLiveSessionEnquiry = () => {
-    if (format === "1-on-1" || format === "group" || format === "live") {
-      setShowChatInput(!showChatInput);
-    } else {
-      handleViewDetails();
-    }
+    setShowChatInput(!showChatInput);
   };
 
   return (
@@ -136,13 +132,13 @@ const SkillCard: React.FC<SkillCardProps> = ({
           <InstructorInfo instructor={instructor} />
           
           <SkillInfo 
-            duration={duration}
-            format={format}
+            duration={duration || "Custom"}
+            format="1-on-1"
             description={description}
             onFormatClick={handleLiveSessionEnquiry}
           />
           
-          {showChatInput && (format === "1-on-1" || format === "group" || format === "live") && (
+          {showChatInput && (
             <ChatInput 
               instructorName={instructor.name}
               onSendMessage={handleSendMessage}
@@ -154,9 +150,9 @@ const SkillCard: React.FC<SkillCardProps> = ({
               variant="outline"
               size="sm"
               className="flex-1"
-              onClick={format === "1-on-1" || format === "group" || format === "live" ? handleLiveSessionEnquiry : handleViewDetails}
+              onClick={handleLiveSessionEnquiry}
             >
-              {format === "1-on-1" || format === "group" || format === "live" ? "Enquire" : "Details"}
+              Enquire
             </ButtonCustom>
             <ButtonCustom
               variant="primary"
@@ -177,8 +173,8 @@ const SkillCard: React.FC<SkillCardProps> = ({
           title,
           category,
           instructor,
-          duration,
-          format,
+          duration: duration || "Custom",
+          format: "1-on-1",
           level,
           description,
           price: 1,
