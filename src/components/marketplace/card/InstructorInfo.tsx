@@ -3,8 +3,9 @@ import React from "react";
 
 interface InstructorInfoProps {
   instructor: {
+    id?: string;
     name: string;
-    avatar: string;
+    avatar?: string;
     rating: number;
   };
 }

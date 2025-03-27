@@ -20,7 +20,7 @@ interface SkillCardProps {
     rating: number;
   };
   duration?: string;
-  format: string;
+  format: "video" | "live" | "chat" | "1-on-1" | "group" | "course" | "materials";
   level: "beginner" | "intermediate" | "advanced";
   description: string;
   imageUrl?: string;
@@ -112,7 +112,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
   };
 
   const handleLiveSessionEnquiry = () => {
-    if (format === "1-on-1" || format === "group") {
+    if (format === "1-on-1" || format === "group" || format === "live") {
       setShowChatInput(!showChatInput);
     } else {
       handleViewDetails();
@@ -145,7 +145,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
           onFormatClick={handleLiveSessionEnquiry}
         />
         
-        {showChatInput && (format === "1-on-1" || format === "group") && (
+        {showChatInput && (format === "1-on-1" || format === "group" || format === "live") && (
           <ChatInput 
             instructorName={instructor.name}
             onSendMessage={handleSendMessage}
@@ -157,9 +157,9 @@ const SkillCard: React.FC<SkillCardProps> = ({
             variant="outline"
             size="sm"
             className="flex-1"
-            onClick={format === "1-on-1" || format === "group" ? handleLiveSessionEnquiry : handleViewDetails}
+            onClick={format === "1-on-1" || format === "group" || format === "live" ? handleLiveSessionEnquiry : handleViewDetails}
           >
-            {format === "1-on-1" || format === "group" ? "Enquire" : "Details"}
+            {format === "1-on-1" || format === "group" || format === "live" ? "Enquire" : "Details"}
           </ButtonCustom>
           <ButtonCustom
             variant="primary"

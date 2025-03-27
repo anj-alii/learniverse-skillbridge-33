@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Search, Award, Calendar, Video, MessageSquare } from "lucide-react";
@@ -16,6 +17,7 @@ const Index = () => {
       title: "Digital Photography Masterclass",
       category: "Photography",
       instructor: {
+        id: "instructor1",
         name: "Alex Morgan",
         avatar: "https://placehold.co/100/9b87f5/ffffff?text=AM",
         rating: 4.8,
@@ -31,6 +33,7 @@ const Index = () => {
       title: "JavaScript for Beginners",
       category: "Programming",
       instructor: {
+        id: "instructor2",
         name: "Sarah Johnson",
         avatar: "https://placehold.co/100/9b87f5/ffffff?text=SJ",
         rating: 4.9,
@@ -46,6 +49,7 @@ const Index = () => {
       title: "Watercolor Painting Techniques",
       category: "Art",
       instructor: {
+        id: "instructor3",
         name: "David Chen",
         avatar: "https://placehold.co/100/9b87f5/ffffff?text=DC",
         rating: 4.7,

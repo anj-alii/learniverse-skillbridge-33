@@ -28,6 +28,7 @@ const Profile = () => {
       title: "Digital Photography Masterclass",
       category: "Photography",
       instructor: {
+        id: user.id,
         name: user.name,
         avatar: user.avatar,
         rating: user.rating,
@@ -43,6 +44,7 @@ const Profile = () => {
       title: "Front-end Web Development",
       category: "Programming",
       instructor: {
+        id: user.id,
         name: user.name,
         avatar: user.avatar,
         rating: user.rating,
@@ -58,6 +60,7 @@ const Profile = () => {
       title: "UI Design Fundamentals",
       category: "Design",
       instructor: {
+        id: user.id,
         name: user.name,
         avatar: user.avatar,
         rating: user.rating,

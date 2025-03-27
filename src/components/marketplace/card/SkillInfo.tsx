@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 interface SkillInfoProps {
   duration: string;
-  format: "video" | "live" | "chat";
+  format: "video" | "live" | "chat" | "1-on-1" | "group" | "course" | "materials";
   description: string;
   onFormatClick: () => void;
 }
@@ -16,6 +16,37 @@ const SkillInfo: React.FC<SkillInfoProps> = ({
   description,
   onFormatClick
 }) => {
+  const getFormatIcon = () => {
+    switch (format) {
+      case "video":
+      case "course":
+        return <Video className="w-3 h-3 mr-1" />;
+      case "live":
+      case "1-on-1":
+      case "group":
+        return <User className="w-3 h-3 mr-1" />;
+      case "chat":
+      case "materials":
+      default:
+        return <MessageSquare className="w-3 h-3 mr-1" />;
+    }
+  };
+
+  const getFormatLabel = () => {
+    switch (format) {
+      case "video": return "Video";
+      case "live": return "Live Session";
+      case "chat": return "Chat";
+      case "1-on-1": return "1-on-1 Session";
+      case "group": return "Group Session";
+      case "course": return "Course";
+      case "materials": return "Materials";
+      default: return format;
+    }
+  };
+
+  const isInteractive = format === "live" || format === "1-on-1" || format === "group";
+
   return (
     <>
       <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
@@ -30,16 +61,12 @@ const SkillInfo: React.FC<SkillInfoProps> = ({
         <div 
           className={cn(
             "flex items-center", 
-            format === "live" && "cursor-pointer hover:text-skill-purple"
+            isInteractive && "cursor-pointer hover:text-skill-purple"
           )}
-          onClick={format === "live" ? onFormatClick : undefined}
+          onClick={isInteractive ? onFormatClick : undefined}
         >
-          {format === "video" && <Video className="w-3 h-3 mr-1" />}
-          {format === "live" && <User className="w-3 h-3 mr-1" />}
-          {format === "chat" && <MessageSquare className="w-3 h-3 mr-1" />}
-          <span>
-            {format === "video" ? "Video" : format === "live" ? "Live Session" : "Chat"}
-          </span>
+          {getFormatIcon()}
+          <span>{getFormatLabel()}</span>
         </div>
       </div>
     </>

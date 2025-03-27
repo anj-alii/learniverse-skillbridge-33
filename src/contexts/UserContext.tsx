@@ -82,9 +82,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const fetchUserProfile = async (userId: string) => {
     try {
       const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
         .single();
 
       if (error) {
@@ -173,10 +173,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     try {
       const { data, error } = await supabase
-        .from("profiles")
+        .from('profiles')
         .update({ credits: user.credits - 1 })
-        .eq("id", user.id)
-        .select("*")
+        .eq('id', user.id)
+        .select()
         .single();
         
       if (error) throw error;
@@ -203,10 +203,10 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     try {
       const { data, error } = await supabase
-        .from("profiles")
+        .from('profiles')
         .update({ credits: user.credits + amount })
-        .eq("id", user.id)
-        .select("*")
+        .eq('id', user.id)
+        .select()
         .single();
         
       if (error) throw error;
