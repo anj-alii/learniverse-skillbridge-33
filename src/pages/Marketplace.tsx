@@ -6,6 +6,7 @@ import { ButtonCustom } from "@/components/ui/button-custom";
 import { getSkills, Skill } from "@/services/skillService";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { toast } from "sonner";
 
 const Marketplace = () => {
   const [skills, setSkills] = useState<Skill[]>([]);
@@ -22,10 +23,16 @@ const Marketplace = () => {
     setIsLoading(true);
     try {
       const data = await getSkills();
+      console.log("Loaded skills:", data);
       setSkills(data);
       setFilteredSkills(data);
+      
+      if (data.length === 0) {
+        toast("No skills found. You might want to add some skills to the marketplace.");
+      }
     } catch (error) {
       console.error("Failed to load skills:", error);
+      toast.error("Failed to load skills. Please try again later.");
     } finally {
       setIsLoading(false);
     }

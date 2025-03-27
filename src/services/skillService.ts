@@ -26,14 +26,7 @@ export async function getSkills() {
   try {
     const { data, error } = await supabase
       .from('skills')
-      .select(`
-        *,
-        profiles:user_id (
-          id,
-          name,
-          avatar
-        )
-      `);
+      .select('*');
 
     if (error) {
       throw error;
@@ -50,12 +43,12 @@ export async function getSkills() {
       price: item.price || 1,
       image: item.image,
       instructor: {
-        id: item.profiles?.id || item.user_id,
-        name: item.profiles?.name || "Instructor",
-        avatar: item.profiles?.avatar || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
+        id: item.user_id,
+        name: "Instructor",
+        avatar: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
         rating: 4.5,
       },
-      is_active: item.is_active,
+      is_active: item.is_active ?? true,
       created_at: item.created_at,
     }));
   } catch (error: any) {
