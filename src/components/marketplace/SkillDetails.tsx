@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { ButtonCustom } from "@/components/ui/button-custom";
 import { Skill } from "@/services/skillService";
-import { Clock, Users, Video, Book, MessageCircle, Star } from "lucide-react";
+import { Clock, Users, Video, Book, MessageCircle, Star, CheckCircle } from "lucide-react";
 import InstructorInfo from "./card/InstructorInfo";
 
 interface SkillDetailsProps {
@@ -54,9 +54,31 @@ const SkillDetails: React.FC<SkillDetailsProps> = ({
     advanced: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-100",
   };
 
+  // Determine learning outcomes based on skill level
+  const learningOutcomes = {
+    beginner: [
+      "Understand the fundamental concepts of " + skill.title,
+      "Build a solid foundation with guided practice exercises",
+      "Complete a simple project applying your new knowledge",
+      "Gain confidence to continue learning independently"
+    ],
+    intermediate: [
+      "Deepen your understanding of " + skill.title + " concepts",
+      "Learn advanced techniques and best practices",
+      "Complete a comprehensive project with real-world applications",
+      "Solve common challenges with expert guidance"
+    ],
+    advanced: [
+      "Master complex " + skill.title + " techniques",
+      "Develop expertise in specialized areas",
+      "Build professional-grade projects with advanced features",
+      "Learn optimization strategies and performance techniques"
+    ]
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">{skill.title}</DialogTitle>
           <DialogDescription>
@@ -108,12 +130,62 @@ const SkillDetails: React.FC<SkillDetailsProps> = ({
 
           <div>
             <h3 className="text-lg font-semibold mb-2">What You'll Learn</h3>
-            <ul className="list-disc pl-5 space-y-1 text-gray-600 dark:text-gray-400">
-              <li>Core techniques and principles for {skill.title}</li>
-              <li>Practical applications and hands-on exercises</li>
-              <li>Expert tips from experienced instructors</li>
-              <li>Personalized feedback on your progress</li>
+            <ul className="space-y-2">
+              {learningOutcomes[skill.level].map((outcome, index) => (
+                <li key={index} className="flex items-start">
+                  <CheckCircle className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-600 dark:text-gray-400">{outcome}</span>
+                </li>
+              ))}
             </ul>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Format Details</h3>
+            <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+              {skill.format === 'video' && (
+                <p className="text-gray-600 dark:text-gray-400">
+                  Access to professionally recorded video lessons that you can watch at your own pace. 
+                  Includes downloadable resources and practice exercises.
+                </p>
+              )}
+              {skill.format === 'live' && (
+                <p className="text-gray-600 dark:text-gray-400">
+                  Scheduled live online sessions where the instructor teaches in real-time. 
+                  Sessions are interactive with Q&A opportunities.
+                </p>
+              )}
+              {skill.format === 'chat' && (
+                <p className="text-gray-600 dark:text-gray-400">
+                  Text-based learning with direct access to the instructor through chat. 
+                  Get quick responses to your questions as you progress.
+                </p>
+              )}
+              {skill.format === '1-on-1' && (
+                <p className="text-gray-600 dark:text-gray-400">
+                  Private sessions tailored specifically to your needs and learning pace.
+                  Direct feedback and personalized instruction.
+                </p>
+              )}
+              {skill.format === 'group' && (
+                <p className="text-gray-600 dark:text-gray-400">
+                  Learn together with a small group of peers. Benefit from collaborative 
+                  learning while still receiving individual attention.
+                </p>
+              )}
+              {skill.format === 'course' && (
+                <p className="text-gray-600 dark:text-gray-400">
+                  Structured curriculum with progressive lessons, assignments, and assessments.
+                  A comprehensive approach to mastering the skill.
+                </p>
+              )}
+              {skill.format === 'materials' && (
+                <p className="text-gray-600 dark:text-gray-400">
+                  High-quality learning resources including guides, templates, and reference materials
+                  that you can use at your own pace.
+                </p>
+              )}
+            </div>
           </div>
         </div>
 

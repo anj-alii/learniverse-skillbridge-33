@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import { toast } from "sonner";
@@ -8,9 +9,10 @@ import { useUser } from "@/contexts/UserContext";
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
+  redirectPath?: string;
 }
 
-const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
+const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, redirectPath = "/" }) => {
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,7 +20,15 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const navigate = useNavigate();
-  const { login, register } = useUser();
+  const { login, register, user } = useUser();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (user && isOpen) {
+      onClose();
+      navigate(redirectPath);
+    }
+  }, [user, isOpen, onClose, navigate, redirectPath]);
 
   if (!isOpen) return null;
 
@@ -35,7 +45,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
         toast.success("Account created successfully!");
       }
       onClose();
-      navigate("/dashboard");
+      navigate(redirectPath);
     } catch (error) {
       console.error(error);
     } finally {

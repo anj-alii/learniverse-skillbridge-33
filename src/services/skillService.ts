@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Database } from "@/integrations/supabase/types";
@@ -26,7 +27,14 @@ export async function getSkills() {
   try {
     const { data, error } = await supabase
       .from('skills')
-      .select('*')
+      .select(`
+        *,
+        profiles:user_id (
+          id,
+          name,
+          avatar
+        )
+      `)
       .eq('is_active', true);
 
     if (error) {
@@ -44,9 +52,9 @@ export async function getSkills() {
       price: item.price || 1,
       image: item.image,
       instructor: {
-        id: item.user_id,
-        name: "Instructor",
-        avatar: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
+        id: item.profiles?.id || item.user_id,
+        name: item.profiles?.name || "Instructor",
+        avatar: item.profiles?.avatar || "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
         rating: 4.5,
       },
       is_active: item.is_active,
