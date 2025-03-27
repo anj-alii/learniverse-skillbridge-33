@@ -150,9 +150,9 @@ const SkillCard: React.FC<SkillCardProps> = ({
               variant="outline"
               size="sm"
               className="flex-1"
-              onClick={handleLiveSessionEnquiry}
+              onClick={handleViewDetails}
             >
-              Enquire
+              View Details
             </ButtonCustom>
             <ButtonCustom
               variant="primary"
