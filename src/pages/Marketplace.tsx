@@ -135,7 +135,7 @@ const Marketplace = () => {
                   category={skill.category}
                   instructor={skill.instructor}
                   duration={skill.duration}
-                  format={skill.format as "video" | "live" | "chat" | "1-on-1" | "group" | "course" | "materials"}
+                  format={skill.format}
                   level={skill.level}
                   description={skill.description}
                   imageUrl={skill.image}

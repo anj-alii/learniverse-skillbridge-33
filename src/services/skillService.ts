@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Database } from "@/integrations/supabase/types";
@@ -27,21 +26,13 @@ export async function getSkills() {
   try {
     const { data, error } = await supabase
       .from('skills')
-      .select(`
-        *,
-        profiles:user_id (
-          id,
-          name,
-          avatar
-        )
-      `)
+      .select('*')
       .eq('is_active', true);
 
     if (error) {
       throw error;
     }
 
-    // Format the data to match our Skill interface
     return data.map((item: any) => ({
       id: item.id,
       title: item.title,
@@ -50,13 +41,13 @@ export async function getSkills() {
       level: item.level,
       format: item.format,
       duration: item.duration,
-      price: item.price,
+      price: item.price || 1,
       image: item.image,
       instructor: {
-        id: item.profiles.id,
-        name: item.profiles.name,
-        avatar: item.profiles.avatar,
-        rating: 4.5, // Default rating until we implement a real rating system
+        id: item.user_id,
+        name: "Instructor",
+        avatar: "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y",
+        rating: 4.5,
       },
       is_active: item.is_active,
       created_at: item.created_at,
@@ -70,7 +61,6 @@ export async function getSkills() {
 
 export async function createSkill(skillData: Omit<Skill, 'id' | 'instructor' | 'is_active' | 'created_at'>) {
   try {
-    // Get the current user
     const { data: { user } } = await supabase.auth.getUser();
     
     if (!user) {
@@ -88,7 +78,7 @@ export async function createSkill(skillData: Omit<Skill, 'id' | 'instructor' | '
         duration: skillData.duration,
         price: skillData.price,
         image: skillData.image,
-        user_id: user.id // Adding the required user_id field
+        user_id: user.id
       })
       .select()
       .single();

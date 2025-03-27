@@ -8,6 +8,7 @@ import InstructorInfo from "./card/InstructorInfo";
 import SkillInfo from "./card/SkillInfo";
 import ChatInput from "./card/ChatInput";
 import { requestSession } from "@/services/skillService";
+import SkillDetails from "./SkillDetails";
 
 interface SkillCardProps {
   id: string;
@@ -43,6 +44,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
   const { user, useCredit } = useUser();
   const [showChatInput, setShowChatInput] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
   
   const handleRequestSwap = async () => {
     if (!user) {
@@ -90,14 +92,8 @@ const SkillCard: React.FC<SkillCardProps> = ({
   };
 
   const handleViewDetails = () => {
-    toast({
-      title: "Viewing Details",
-      description: `You're viewing details for "${title}"`,
-      duration: 3000,
-    });
-    
+    setShowDetails(true);
     console.log(`Viewing details for skill: ${id} - ${title}`);
-    // Here you would typically navigate to a details page
   };
 
   const handleSendMessage = async (chatMessage: string) => {
@@ -120,59 +116,81 @@ const SkillCard: React.FC<SkillCardProps> = ({
   };
 
   return (
-    <div 
-      className="glass-card overflow-hidden transition-all duration-300 hover:shadow-xl group skill-card-appear"
-      style={{ "--appear-delay": index } as React.CSSProperties}
-    >
-      <CardHeader 
-        imageUrl={imageUrl || "https://placehold.co/600x400/9b87f5/ffffff?text=Skill"}
-        title={title}
-        category={category}
-        level={level}
-      />
-      
-      <div className="p-5">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-1">
-          {title}
-        </h3>
-        
-        <InstructorInfo instructor={instructor} />
-        
-        <SkillInfo 
-          duration={duration}
-          format={format}
-          description={description}
-          onFormatClick={handleLiveSessionEnquiry}
+    <>
+      <div 
+        className="glass-card overflow-hidden transition-all duration-300 hover:shadow-xl group skill-card-appear"
+        style={{ "--appear-delay": index } as React.CSSProperties}
+      >
+        <CardHeader 
+          imageUrl={imageUrl || "https://placehold.co/600x400/9b87f5/ffffff?text=Skill"}
+          title={title}
+          category={category}
+          level={level}
         />
         
-        {showChatInput && (format === "1-on-1" || format === "group" || format === "live") && (
-          <ChatInput 
-            instructorName={instructor.name}
-            onSendMessage={handleSendMessage}
+        <div className="p-5">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-1">
+            {title}
+          </h3>
+          
+          <InstructorInfo instructor={instructor} />
+          
+          <SkillInfo 
+            duration={duration}
+            format={format}
+            description={description}
+            onFormatClick={handleLiveSessionEnquiry}
           />
-        )}
-        
-        <div className="flex justify-between gap-2">
-          <ButtonCustom
-            variant="outline"
-            size="sm"
-            className="flex-1"
-            onClick={format === "1-on-1" || format === "group" || format === "live" ? handleLiveSessionEnquiry : handleViewDetails}
-          >
-            {format === "1-on-1" || format === "group" || format === "live" ? "Enquire" : "Details"}
-          </ButtonCustom>
-          <ButtonCustom
-            variant="primary"
-            size="sm"
-            className="flex-1"
-            onClick={handleRequestSwap}
-            disabled={isRequesting}
-          >
-            {isRequesting ? "Requesting..." : "Request Swap"}
-          </ButtonCustom>
+          
+          {showChatInput && (format === "1-on-1" || format === "group" || format === "live") && (
+            <ChatInput 
+              instructorName={instructor.name}
+              onSendMessage={handleSendMessage}
+            />
+          )}
+          
+          <div className="flex justify-between gap-2">
+            <ButtonCustom
+              variant="outline"
+              size="sm"
+              className="flex-1"
+              onClick={format === "1-on-1" || format === "group" || format === "live" ? handleLiveSessionEnquiry : handleViewDetails}
+            >
+              {format === "1-on-1" || format === "group" || format === "live" ? "Enquire" : "Details"}
+            </ButtonCustom>
+            <ButtonCustom
+              variant="primary"
+              size="sm"
+              className="flex-1"
+              onClick={handleRequestSwap}
+              disabled={isRequesting}
+            >
+              {isRequesting ? "Requesting..." : "Request Swap"}
+            </ButtonCustom>
+          </div>
         </div>
       </div>
-    </div>
+
+      <SkillDetails 
+        skill={showDetails ? {
+          id,
+          title,
+          category,
+          instructor,
+          duration,
+          format,
+          level,
+          description,
+          price: 1,
+          image: imageUrl,
+          is_active: true,
+          created_at: new Date().toISOString(),
+        } : null}
+        isOpen={showDetails}
+        onClose={() => setShowDetails(false)}
+        onRequestSwap={handleRequestSwap}
+      />
+    </>
   );
 };
 
