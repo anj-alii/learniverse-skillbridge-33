@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { toast } from "sonner";
@@ -23,6 +22,7 @@ interface UserContextType {
   logout: () => Promise<void>;
   useCredit: () => Promise<boolean>;
   addCredit: (amount: number) => Promise<void>;
+  showUploadSkillPrompt: () => void;
 }
 
 // Create context with default values
@@ -35,6 +35,7 @@ const UserContext = createContext<UserContextType>({
   logout: async () => {},
   useCredit: async () => false,
   addCredit: async () => {},
+  showUploadSkillPrompt: () => {},
 });
 
 // Custom hook to use the user context
@@ -143,8 +144,19 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (error) throw error;
       
-      // User profile will be created by the database trigger
-      toast.success("Account created! Verify your email if required.");
+      // Add 10 default credits to new user profile
+      if (data.user) {
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update({ credits: 10 })
+          .eq('id', data.user.id);
+        
+        if (profileError) {
+          console.error("Error adding default credits:", profileError);
+        }
+      }
+      
+      toast.success("Account created with 10 starter credits! Verify your email if required.");
     } catch (error: any) {
       console.error("Registration error:", error);
       toast.error(error.message || "Failed to create account");
@@ -167,9 +179,33 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Show prompt to upload a skill when credits are depleted
+  const showUploadSkillPrompt = () => {
+    toast.info(
+      <div className="flex flex-col gap-2">
+        <p className="font-semibold">Out of credits?</p>
+        <p>Share your skills to earn more credits! Upload a skill you can teach to receive credits.</p>
+        <a 
+          href="/account" 
+          className="text-skill-purple hover:underline font-medium"
+        >
+          Go to Account → My Skills → Add New Skill
+        </a>
+      </div>,
+      {
+        duration: 8000,
+      }
+    );
+  };
+
   // Use a credit
   const useCredit = async () => {
-    if (!user || user.credits <= 0) return false;
+    if (!user) return false;
+    
+    if (user.credits <= 0) {
+      showUploadSkillPrompt();
+      return false;
+    }
     
     try {
       const { data, error } = await supabase
@@ -233,7 +269,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       register, 
       logout,
       useCredit,
-      addCredit
+      addCredit,
+      showUploadSkillPrompt
     }}>
       {children}
     </UserContext.Provider>

@@ -41,7 +41,7 @@ const SkillCard: React.FC<SkillCardProps> = ({
   index,
 }) => {
   const { toast } = useToast();
-  const { user, useCredit } = useUser();
+  const { user, useCredit, showUploadSkillPrompt } = useUser();
   const [showChatInput, setShowChatInput] = useState(false);
   const [isRequesting, setIsRequesting] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
@@ -71,12 +71,16 @@ const SkillCard: React.FC<SkillCardProps> = ({
           duration: 3000,
         });
       } else {
-        toast({
-          title: "Insufficient Credits",
-          description: "You don't have enough credits to request a skill swap",
-          variant: "destructive",
-          duration: 3000,
-        });
+        if (user.credits <= 0) {
+          showUploadSkillPrompt();
+        } else {
+          toast({
+            title: "Insufficient Credits",
+            description: "You don't have enough credits to request a skill swap",
+            variant: "destructive",
+            duration: 3000,
+          });
+        }
       }
     } catch (error) {
       console.error("Error requesting swap:", error);
