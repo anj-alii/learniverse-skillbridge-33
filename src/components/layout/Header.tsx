@@ -133,24 +133,13 @@ const Header = () => {
               )}
             </div>
           ) : (
-            <>
-              <ButtonCustom 
-                variant="outline" 
-                size="sm"
-                onClick={() => setIsAuthModalOpen(true)}
-              >
-                Sign In
-              </ButtonCustom>
-              <ButtonCustom 
-                variant="primary" 
-                size="sm"
-                onClick={() => {
-                  setIsAuthModalOpen(true);
-                }}
-              >
-                Join SkillSwap
-              </ButtonCustom>
-            </>
+            <ButtonCustom 
+              variant="primary" 
+              size="sm"
+              onClick={() => setIsAuthModalOpen(true)}
+            >
+              Sign In
+            </ButtonCustom>
           )}
         </div>
 
@@ -251,24 +240,14 @@ const Header = () => {
                 </ButtonCustom>
               </>
             ) : (
-              <>
-                <ButtonCustom 
-                  variant="outline" 
-                  size="md" 
-                  className="w-full"
-                  onClick={() => setIsAuthModalOpen(true)}
-                >
-                  Sign In
-                </ButtonCustom>
-                <ButtonCustom 
-                  variant="primary" 
-                  size="md" 
-                  className="w-full"
-                  onClick={() => setIsAuthModalOpen(true)}
-                >
-                  Join SkillSwap
-                </ButtonCustom>
-              </>
+              <ButtonCustom 
+                variant="primary" 
+                size="md" 
+                className="w-full"
+                onClick={() => setIsAuthModalOpen(true)}
+              >
+                Sign In
+              </ButtonCustom>
             )}
           </div>
         </div>
