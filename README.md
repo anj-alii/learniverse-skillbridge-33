@@ -25,6 +25,17 @@ A platform for users to exchange skills and knowledge through 1-on-1 sessions. U
 - Supabase for backend and authentication
 - Google Gemini AI for profile matching
 
+## Supabase Configuration
+
+This project uses Supabase for authentication and database functionality. The Supabase connection is already configured with the following parameters in `src/integrations/supabase/client.ts`:
+
+```typescript
+const SUPABASE_URL = "https://ercsjuuyfyokjgkveeev.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVyY3NqdXV5Znlva2pna3ZlZWV2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDMwODYyMDcsImV4cCI6MjA1ODY2MjIwN30.HuJ5uEtQh5DtxZ696sBvSU0K1T7UQYcVIhBs7mwnouM";
+```
+
+These values will work as-is when you deploy the project. The database connection will continue to function correctly in both development and production environments.
+
 ## How to Deploy to Google IDX (Firebase)
 
 This project can be easily deployed to Google IDX (Firebase Hosting). Here's how:
