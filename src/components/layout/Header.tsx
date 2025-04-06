@@ -38,6 +38,7 @@ const Header = () => {
     { name: "Home", path: "/" },
     { name: "Marketplace", path: "/marketplace" },
     { name: "How It Works", path: "/how-it-works" },
+    { name: "Blog", path: "/blog" },
   ];
 
   if (user) {
