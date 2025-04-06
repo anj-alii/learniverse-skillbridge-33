@@ -1,10 +1,11 @@
+
 import React from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useUser } from "@/contexts/UserContext";
 import { ButtonCustom } from "@/components/ui/button-custom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BookOpen, Calendar, Clock, ListChecks, Settings, Users, Home } from "lucide-react";
+import { BookOpen, Calendar, Clock, ListChecks, Settings, Users, Home, Coins } from "lucide-react";
 import Header from "@/components/layout/Header";
 
 const Dashboard = () => {
@@ -27,21 +28,27 @@ const Dashboard = () => {
               <h1 className="text-3xl font-bold">Welcome, {user.name}!</h1>
               <p className="text-gray-600 dark:text-gray-400 mt-1">Manage your skills, sessions, and connections</p>
             </div>
-            <div className="flex gap-2">
-              <ButtonCustom 
-                variant="outline" 
-                size="sm" 
-                onClick={() => navigate("/account")}
-              >
-                Account Settings
-              </ButtonCustom>
-              <ButtonCustom 
-                variant="outline" 
-                size="sm" 
-                onClick={logout}
-              >
-                Sign Out
-              </ButtonCustom>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-full">
+                <Coins className="w-4 h-4 text-skill-purple" />
+                <span className="text-sm font-medium">{user.credits} Credits</span>
+              </div>
+              <div className="flex gap-2">
+                <ButtonCustom 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => navigate("/account")}
+                >
+                  Account Settings
+                </ButtonCustom>
+                <ButtonCustom 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={logout}
+                >
+                  Sign Out
+                </ButtonCustom>
+              </div>
             </div>
           </div>
 
